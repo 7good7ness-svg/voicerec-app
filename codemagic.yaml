@@ -1,0 +1,134 @@
+workflows:
+
+  # ===================================================
+  # メインワークフロー: TestFlight配布
+  # ===================================================
+  ios-testflight:
+    name: VoiceRec iOS+Watch → TestFlight
+    max_build_duration: 120
+    instance_type: mac_mini_m1
+
+    integrations:
+      app_store_connect: codemagic_api_key  # Codemagic管理画面 > Team > Integrations で設定
+
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.voicerec.app
+      vars:
+        XCODE_PROJECT: "VoiceRec.xcodeproj"
+        XCODE_SCHEME: "VoiceRec"
+        BUNDLE_ID: "com.voicerec.app"
+        WATCH_BUNDLE_ID: "com.voicerec.app.watchkitapp"
+        # ↓ App Store Connect のApp IDに変更（数字10桁）
+        APP_STORE_APPLE_ID: "YOUR_APP_APPLE_ID"
+      xcode: latest  # Xcode 15.x (Swift 5.9+)
+
+    triggering:
+      events:
+        - push
+        - tag
+      branch_patterns:
+        - pattern: main
+          include: true
+
+    scripts:
+      - name: Set build number from CI
+        script: |
+          BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID") + 1))
+          agvtool new-version -all "$BUILD_NUMBER"
+
+      - name: Set up code signing (iPhone)
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --platform IOS \
+            --type IOS_APP_STORE \
+            --create
+          app-store-connect fetch-signing-files "$WATCH_BUNDLE_ID" \
+            --platform IOS \
+            --type IOS_APP_STORE \
+            --create
+          keychain add-certificates
+          xcode-project use-profiles
+
+      - name: Resolve Swift Package Manager dependencies
+        script: |
+          xcodebuild \
+            -resolvePackageDependencies \
+            -project "$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -clonedSourcePackagesDirPath "$CM_BUILD_DIR/spm_cache"
+
+      - name: Build and archive (iOS + watchOS)
+        script: |
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME" \
+            --cloned-source-packages-path "$CM_BUILD_DIR/spm_cache"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY       # Codemagic環境変数で設定
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER     # Codemagic環境変数で設定
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID       # Codemagic環境変数で設定
+        submit_to_testflight: true
+        beta_groups:
+          - Internal Testers
+      email:
+        recipients:
+          - your-email@example.com
+        notify:
+          success: true
+          failure: true
+
+  # ===================================================
+  # 開発用ワークフロー: ビルド確認のみ（署名なし）
+  # ===================================================
+  ios-build-only:
+    name: VoiceRec Build Check (no signing)
+    max_build_duration: 60
+    instance_type: mac_mini_m1
+
+    environment:
+      vars:
+        XCODE_PROJECT: "VoiceRec.xcodeproj"
+        XCODE_SCHEME: "VoiceRec"
+      xcode: latest
+
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: develop
+          include: true
+        - pattern: "feature/*"
+          include: true
+
+    scripts:
+      - name: Resolve SPM dependencies
+        script: |
+          xcodebuild \
+            -resolvePackageDependencies \
+            -project "$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME"
+
+      - name: Build (simulator - no signing required)
+        script: |
+          xcodebuild \
+            -project "$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -destination "platform=iOS Simulator,name=iPhone 15 Pro" \
+            -configuration Debug \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            build | xcpretty
+
+    artifacts:
+      - /tmp/xcodebuild_logs/*.log

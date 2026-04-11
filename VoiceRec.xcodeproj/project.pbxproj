@@ -1,0 +1,670 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA020001 /* VoiceRecApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010001 /* VoiceRecApp.swift */; };
+		AA020002 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010002 /* AppDelegate.swift */; };
+		AA020003 /* Recording.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010003 /* Recording.swift */; };
+		AA020004 /* RecordingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010004 /* RecordingListViewModel.swift */; };
+		AA020005 /* PlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010005 /* PlayerViewModel.swift */; };
+		AA020006 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010006 /* ContentView.swift */; };
+		AA020007 /* RecordingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010007 /* RecordingListView.swift */; };
+		AA020008 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010008 /* PlayerView.swift */; };
+		AA020009 /* GoogleDriveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010009 /* GoogleDriveButton.swift */; };
+		AA020010 /* WatchConnectivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010010 /* WatchConnectivityService.swift */; };
+		AA020011 /* SpeechTranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010011 /* SpeechTranscriptionService.swift */; };
+		AA020012 /* SummarizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010012 /* SummarizationService.swift */; };
+		AA020013 /* TranslationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010013 /* TranslationService.swift */; };
+		AA020014 /* GoogleDriveService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010014 /* GoogleDriveService.swift */; };
+		AA020015 /* AudioPlayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010015 /* AudioPlayerService.swift */; };
+		AA020016 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA010016 /* Assets.xcassets */; };
+		AA020017 /* VoiceRecWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010017 /* VoiceRecWatchApp.swift */; };
+		AA020018 /* WatchContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010018 /* WatchContentView.swift */; };
+		AA020019 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010019 /* RecordingView.swift */; };
+		AA020020 /* WatchRecordingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010020 /* WatchRecordingListView.swift */; };
+		AA020021 /* AudioRecorderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010021 /* AudioRecorderService.swift */; };
+		AA020022 /* WatchWatchConnectivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA010022 /* WatchWatchConnectivityService.swift */; };
+		AA020023 /* WatchAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA010023 /* WatchAssets.xcassets */; };
+		AA020024 /* VoiceRecWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = AA090002 /* VoiceRecWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AA020025 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = AA100001 /* GoogleSignIn */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AA040007 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				AA020024 /* VoiceRecWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		AA010001 /* VoiceRecApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecApp.swift; sourceTree = "<group>"; };
+		AA010002 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AA010003 /* Recording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recording.swift; sourceTree = "<group>"; };
+		AA010004 /* RecordingListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingListViewModel.swift; sourceTree = "<group>"; };
+		AA010005 /* PlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewModel.swift; sourceTree = "<group>"; };
+		AA010006 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AA010007 /* RecordingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingListView.swift; sourceTree = "<group>"; };
+		AA010008 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		AA010009 /* GoogleDriveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleDriveButton.swift; sourceTree = "<group>"; };
+		AA010010 /* WatchConnectivityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityService.swift; sourceTree = "<group>"; };
+		AA010011 /* SpeechTranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechTranscriptionService.swift; sourceTree = "<group>"; };
+		AA010012 /* SummarizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummarizationService.swift; sourceTree = "<group>"; };
+		AA010013 /* TranslationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationService.swift; sourceTree = "<group>"; };
+		AA010014 /* GoogleDriveService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleDriveService.swift; sourceTree = "<group>"; };
+		AA010015 /* AudioPlayerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerService.swift; sourceTree = "<group>"; };
+		AA010016 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA010017 /* VoiceRecWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecWatchApp.swift; sourceTree = "<group>"; };
+		AA010018 /* WatchContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AA010019 /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
+		AA010020 /* WatchRecordingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingListView.swift; sourceTree = "<group>"; };
+		AA010021 /* AudioRecorderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorderService.swift; sourceTree = "<group>"; };
+		AA010022 /* WatchWatchConnectivityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityService.swift; sourceTree = "<group>"; };
+		AA010023 /* WatchAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA010024 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA010025 /* VoiceRec.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VoiceRec.entitlements; sourceTree = "<group>"; };
+		AA010026 /* WatchInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA010027 /* VoiceRecWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VoiceRecWatch.entitlements; sourceTree = "<group>"; };
+		AA090001 /* VoiceRec.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VoiceRec.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA090002 /* VoiceRecWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VoiceRecWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA040002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA020025 /* GoogleSignIn in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA040005 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA030001 /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				AA030002 /* VoiceRec */,
+				AA030009 /* VoiceRecWatch */,
+				AA030014 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AA030002 /* VoiceRec */ = {
+			isa = PBXGroup;
+			children = (
+				AA030003 /* App */,
+				AA030004 /* Models */,
+				AA030005 /* ViewModels */,
+				AA030006 /* Views */,
+				AA030007 /* Services */,
+				AA030008 /* Resources */,
+				AA010025 /* VoiceRec.entitlements */,
+			);
+			path = VoiceRec;
+			sourceTree = "<group>";
+		};
+		AA030003 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				AA010001 /* VoiceRecApp.swift */,
+				AA010002 /* AppDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		AA030004 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AA010003 /* Recording.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AA030005 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				AA010004 /* RecordingListViewModel.swift */,
+				AA010005 /* PlayerViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		AA030006 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AA010006 /* ContentView.swift */,
+				AA010007 /* RecordingListView.swift */,
+				AA010008 /* PlayerView.swift */,
+				AA010009 /* GoogleDriveButton.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AA030007 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AA010010 /* WatchConnectivityService.swift */,
+				AA010011 /* SpeechTranscriptionService.swift */,
+				AA010012 /* SummarizationService.swift */,
+				AA010013 /* TranslationService.swift */,
+				AA010014 /* GoogleDriveService.swift */,
+				AA010015 /* AudioPlayerService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		AA030008 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AA010016 /* Assets.xcassets */,
+				AA010024 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		AA030009 /* VoiceRecWatch */ = {
+			isa = PBXGroup;
+			children = (
+				AA030010 /* App */,
+				AA030011 /* Views */,
+				AA030012 /* Services */,
+				AA030013 /* Resources */,
+				AA010027 /* VoiceRecWatch.entitlements */,
+			);
+			path = VoiceRecWatch;
+			sourceTree = "<group>";
+		};
+		AA030010 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				AA010017 /* VoiceRecWatchApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		AA030011 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AA010018 /* WatchContentView.swift */,
+				AA010019 /* RecordingView.swift */,
+				AA010020 /* WatchRecordingListView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AA030012 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AA010021 /* AudioRecorderService.swift */,
+				AA010022 /* WatchWatchConnectivityService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		AA030013 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AA010023 /* WatchAssets.xcassets */,
+				AA010026 /* WatchInfo.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		AA030014 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA090001 /* VoiceRec.app */,
+				AA090002 /* VoiceRecWatch.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA050001 /* VoiceRec */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA070002 /* Build configuration list for PBXNativeTarget "VoiceRec" */;
+			buildPhases = (
+				AA040001 /* Sources */,
+				AA040002 /* Frameworks */,
+				AA040003 /* Resources */,
+				AA040007 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA050003 /* PBXTargetDependency */,
+			);
+			name = VoiceRec;
+			packageProductDependencies = (
+				AA100001 /* GoogleSignIn */,
+			);
+			productName = VoiceRec;
+			productReference = AA090001 /* VoiceRec.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AA050002 /* VoiceRecWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA070003 /* Build configuration list for PBXNativeTarget "VoiceRecWatch" */;
+			buildPhases = (
+				AA040004 /* Sources */,
+				AA040005 /* Frameworks */,
+				AA040006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VoiceRecWatch;
+			productName = VoiceRecWatch;
+			productReference = AA090002 /* VoiceRecWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA080001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					AA050001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					AA050002 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = AA070001 /* Build configuration list for PBXProject "VoiceRec" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = ja;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				ja,
+				Base,
+			);
+			mainGroup = AA030001;
+			packageReferences = (
+				AA100002 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
+			productRefGroup = AA030014 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA050001 /* VoiceRec */,
+				AA050002 /* VoiceRecWatch */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AA040003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA020016 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA040006 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA020023 /* WatchAssets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA040001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA020001 /* VoiceRecApp.swift in Sources */,
+				AA020002 /* AppDelegate.swift in Sources */,
+				AA020003 /* Recording.swift in Sources */,
+				AA020004 /* RecordingListViewModel.swift in Sources */,
+				AA020005 /* PlayerViewModel.swift in Sources */,
+				AA020006 /* ContentView.swift in Sources */,
+				AA020007 /* RecordingListView.swift in Sources */,
+				AA020008 /* PlayerView.swift in Sources */,
+				AA020009 /* GoogleDriveButton.swift in Sources */,
+				AA020010 /* WatchConnectivityService.swift in Sources */,
+				AA020011 /* SpeechTranscriptionService.swift in Sources */,
+				AA020012 /* SummarizationService.swift in Sources */,
+				AA020013 /* TranslationService.swift in Sources */,
+				AA020014 /* GoogleDriveService.swift in Sources */,
+				AA020015 /* AudioPlayerService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA040004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA020017 /* VoiceRecWatchApp.swift in Sources */,
+				AA020018 /* WatchContentView.swift in Sources */,
+				AA020019 /* RecordingView.swift in Sources */,
+				AA020020 /* WatchRecordingListView.swift in Sources */,
+				AA020021 /* AudioRecorderService.swift in Sources */,
+				AA020022 /* WatchWatchConnectivityService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AA050003 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA050002 /* VoiceRecWatch */;
+			targetProxy = AA050004 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXContainerItemProxy section */
+		AA050004 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA080001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA050002;
+			remoteInfo = VoiceRecWatch;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin XCBuildConfiguration section */
+		AA060001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_CYCLE = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AA060002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_CYCLE = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		AA060003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = VoiceRec/VoiceRec.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = VoiceRec/Resources/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.voicerec.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA060004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = VoiceRec/VoiceRec.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = VoiceRec/Resources/Info.plist;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.voicerec.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AA060005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = VoiceRecWatch/VoiceRecWatch.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = VoiceRecWatch/Resources/Info.plist;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.voicerec.app.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		AA060006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = VoiceRecWatch/VoiceRecWatch.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = VoiceRecWatch/Resources/Info.plist;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.voicerec.app.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA070001 /* Build configuration list for PBXProject "VoiceRec" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA060001 /* Debug */,
+				AA060002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA070002 /* Build configuration list for PBXNativeTarget "VoiceRec" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA060003 /* Debug */,
+				AA060004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA070003 /* Build configuration list for PBXNativeTarget "VoiceRecWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA060005 /* Debug */,
+				AA060006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AA100002 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AA100001 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA100002 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+/* End XCSwiftPackageProductDependency section */
+
+	};
+	rootObject = AA080001 /* Project object */;
+}
