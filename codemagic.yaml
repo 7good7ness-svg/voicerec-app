@@ -1,7 +1,95 @@
 workflows:
 
   # ===================================================
-  # メインワークフロー: TestFlight配布
+  # 開発用ワークフロー: シミュレータービルド＋スクリーンショット
+  # （署名不要・Codemagic無料枠で動作）
+  # ===================================================
+  ios-simulator-demo:
+    name: VoiceRec Simulator Build & Screenshots
+    max_build_duration: 60
+    instance_type: mac_mini_m1
+
+    environment:
+      vars:
+        XCODE_PROJECT: "VoiceRec.xcodeproj"
+        XCODE_SCHEME: "VoiceRec"
+        SIMULATOR_NAME: "iPhone 15 Pro"
+        SIMULATOR_OS: "17.4"
+      xcode: latest
+
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: master
+          include: true
+        - pattern: main
+          include: true
+
+    scripts:
+      - name: Resolve SPM dependencies
+        script: |
+          xcodebuild \
+            -resolvePackageDependencies \
+            -project "$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME"
+
+      - name: Build for simulator (no signing)
+        script: |
+          xcodebuild \
+            -project "$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -destination "platform=iOS Simulator,name=$SIMULATOR_NAME" \
+            -configuration Debug \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            -derivedDataPath "$CM_BUILD_DIR/DerivedData" \
+            build | xcpretty
+
+      - name: Boot simulator & launch app
+        script: |
+          # シミュレーターを起動
+          UDID=$(xcrun simctl list devices available | grep "$SIMULATOR_NAME" | head -1 | grep -oE '[0-9A-F-]{36}')
+          echo "Simulator UDID: $UDID"
+          xcrun simctl boot "$UDID" || true
+          open -a Simulator
+          sleep 10
+
+          # アプリをインストール＆起動
+          APP_PATH=$(find "$CM_BUILD_DIR/DerivedData" -name "*.app" -not -path "*/WatchApp*" | head -1)
+          echo "App path: $APP_PATH"
+          xcrun simctl install "$UDID" "$APP_PATH"
+          xcrun simctl launch "$UDID" com.voicerec.app
+          sleep 5
+
+      - name: Capture screenshots
+        script: |
+          UDID=$(xcrun simctl list devices booted | grep -oE '[0-9A-F-]{36}' | head -1)
+          mkdir -p "$CM_BUILD_DIR/screenshots"
+
+          # ホーム画面スクリーンショット
+          xcrun simctl io "$UDID" screenshot "$CM_BUILD_DIR/screenshots/01_home.png"
+          sleep 2
+
+          echo "Screenshots saved to $CM_BUILD_DIR/screenshots/"
+          ls "$CM_BUILD_DIR/screenshots/"
+
+    artifacts:
+      - $CM_BUILD_DIR/screenshots/*.png
+      - /tmp/xcodebuild_logs/*.log
+
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com
+        notify:
+          success: true
+          failure: true
+
+  # ===================================================
+  # 本番ワークフロー: TestFlight配布
+  # （Apple Developer Program $99/年 が必要）
   # ===================================================
   ios-testflight:
     name: VoiceRec iOS+Watch → TestFlight
@@ -9,7 +97,7 @@ workflows:
     instance_type: mac_mini_m1
 
     integrations:
-      app_store_connect: codemagic_api_key  # Codemagic管理画面 > Team > Integrations で設定
+      app_store_connect: codemagic_api_key
 
     environment:
       ios_signing:
@@ -20,16 +108,14 @@ workflows:
         XCODE_SCHEME: "VoiceRec"
         BUNDLE_ID: "com.voicerec.app"
         WATCH_BUNDLE_ID: "com.voicerec.app.watchkitapp"
-        # ↓ App Store Connect のApp IDに変更（数字10桁）
         APP_STORE_APPLE_ID: "YOUR_APP_APPLE_ID"
-      xcode: latest  # Xcode 15.x (Swift 5.9+)
+      xcode: latest
 
     triggering:
       events:
-        - push
         - tag
       branch_patterns:
-        - pattern: main
+        - pattern: master
           include: true
 
     scripts:
@@ -38,7 +124,7 @@ workflows:
           BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID") + 1))
           agvtool new-version -all "$BUILD_NUMBER"
 
-      - name: Set up code signing (iPhone)
+      - name: Set up code signing
         script: |
           keychain initialize
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
@@ -52,7 +138,7 @@ workflows:
           keychain add-certificates
           xcode-project use-profiles
 
-      - name: Resolve Swift Package Manager dependencies
+      - name: Resolve SPM dependencies
         script: |
           xcodebuild \
             -resolvePackageDependencies \
@@ -60,7 +146,7 @@ workflows:
             -scheme "$XCODE_SCHEME" \
             -clonedSourcePackagesDirPath "$CM_BUILD_DIR/spm_cache"
 
-      - name: Build and archive (iOS + watchOS)
+      - name: Build and archive
         script: |
           xcode-project build-ipa \
             --project "$XCODE_PROJECT" \
@@ -74,9 +160,9 @@ workflows:
 
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY       # Codemagic環境変数で設定
-        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER     # Codemagic環境変数で設定
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID       # Codemagic環境変数で設定
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
         beta_groups:
           - Internal Testers
@@ -86,49 +172,3 @@ workflows:
         notify:
           success: true
           failure: true
-
-  # ===================================================
-  # 開発用ワークフロー: ビルド確認のみ（署名なし）
-  # ===================================================
-  ios-build-only:
-    name: VoiceRec Build Check (no signing)
-    max_build_duration: 60
-    instance_type: mac_mini_m1
-
-    environment:
-      vars:
-        XCODE_PROJECT: "VoiceRec.xcodeproj"
-        XCODE_SCHEME: "VoiceRec"
-      xcode: latest
-
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: develop
-          include: true
-        - pattern: "feature/*"
-          include: true
-
-    scripts:
-      - name: Resolve SPM dependencies
-        script: |
-          xcodebuild \
-            -resolvePackageDependencies \
-            -project "$XCODE_PROJECT" \
-            -scheme "$XCODE_SCHEME"
-
-      - name: Build (simulator - no signing required)
-        script: |
-          xcodebuild \
-            -project "$XCODE_PROJECT" \
-            -scheme "$XCODE_SCHEME" \
-            -destination "platform=iOS Simulator,name=iPhone 15 Pro" \
-            -configuration Debug \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGNING_ALLOWED=NO \
-            build | xcpretty
-
-    artifacts:
-      - /tmp/xcodebuild_logs/*.log
