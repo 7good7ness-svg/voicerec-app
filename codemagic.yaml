@@ -54,17 +54,19 @@ workflows:
           echo "Simulator UDID: $UDID"
           xcrun simctl boot "$UDID" || true
           open -a Simulator
-          # シミュレーター完全起動を待つ
+          # シミュレーターOS完全起動を待つ（bootstatus -b でブート完了まで待機）
           xcrun simctl bootstatus "$UDID" -b
-          sleep 15
+          echo "Simulator booted. Waiting for SpringBoard..."
+          sleep 30
 
           # アプリをインストール＆起動
           APP_PATH=$(find "$CM_BUILD_DIR/DerivedData" -name "*.app" -not -path "*/WatchApp*" | head -1)
           echo "App path: $APP_PATH"
           xcrun simctl install "$UDID" "$APP_PATH"
           xcrun simctl launch "$UDID" com.voicerec.app
-          # アプリ起動＆UI描画を待つ
-          sleep 15
+          echo "App launched. Waiting for UI to render..."
+          # アプリUI描画を待つ
+          sleep 30
 
       - name: Capture screenshots
         script: |
