@@ -54,14 +54,17 @@ workflows:
           echo "Simulator UDID: $UDID"
           xcrun simctl boot "$UDID" || true
           open -a Simulator
-          sleep 10
+          # シミュレーター完全起動を待つ
+          xcrun simctl bootstatus "$UDID" -b
+          sleep 15
 
           # アプリをインストール＆起動
           APP_PATH=$(find "$CM_BUILD_DIR/DerivedData" -name "*.app" -not -path "*/WatchApp*" | head -1)
           echo "App path: $APP_PATH"
           xcrun simctl install "$UDID" "$APP_PATH"
           xcrun simctl launch "$UDID" com.voicerec.app
-          sleep 5
+          # アプリ起動＆UI描画を待つ
+          sleep 15
 
       - name: Capture screenshots
         script: |
