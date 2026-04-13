@@ -63,10 +63,9 @@ workflows:
           APP_PATH=$(find "$CM_BUILD_DIR/DerivedData" -name "*.app" -not -path "*/WatchApp*" | head -1)
           echo "App path: $APP_PATH"
           xcrun simctl install "$UDID" "$APP_PATH"
-          xcrun simctl launch --console-pty "$UDID" com.voicerec.app &
+          xcrun simctl launch "$UDID" com.voicerec.app
           echo "App launched. Waiting for UI to render..."
-          # アプリUI描画を待つ
-          sleep 45
+          sleep 60
 
       - name: Capture screenshots
         script: |
