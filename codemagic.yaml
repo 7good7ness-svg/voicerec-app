@@ -63,9 +63,17 @@ workflows:
           APP_PATH=$(find "$CM_BUILD_DIR/DerivedData" -name "*.app" -not -path "*/WatchApp*" | head -1)
           echo "App path: $APP_PATH"
           xcrun simctl install "$UDID" "$APP_PATH"
+          # システム通知を閉じる
+          xcrun simctl spawn "$UDID" notifyutil -p com.apple.springboard.hasUnlockedOnce || true
+          sleep 5
+          # アプリを起動（フォアグラウンド）
           xcrun simctl launch "$UDID" com.voicerec.app
-          echo "App launched. Waiting for UI to render..."
-          sleep 60
+          echo "App launched."
+          sleep 10
+          # 念のため再度launchしてフォアグラウンドに
+          xcrun simctl launch "$UDID" com.voicerec.app
+          echo "Waiting for UI..."
+          sleep 30
 
       - name: Capture screenshots
         script: |
