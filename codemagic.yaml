@@ -54,38 +54,39 @@ workflows:
           echo "Simulator UDID: $UDID"
           xcrun simctl boot "$UDID" || true
           open -a Simulator
-          # シミュレーターOS完全起動を待つ（bootstatus -b でブート完了まで待機）
           xcrun simctl bootstatus "$UDID" -b
           echo "Simulator booted. Waiting for SpringBoard..."
           sleep 30
 
-          # アプリをインストール＆起動
+          # アプリをインストール
           APP_PATH=$(find "$CM_BUILD_DIR/DerivedData" -name "*.app" -not -path "*/WatchApp*" | head -1)
           echo "App path: $APP_PATH"
           xcrun simctl install "$UDID" "$APP_PATH"
-          # システム通知を閉じる
-          xcrun simctl spawn "$UDID" notifyutil -p com.apple.springboard.hasUnlockedOnce || true
+
+          # インストール確認
+          echo "Installed apps:"
+          xcrun simctl listapps "$UDID" | grep -i voicerec || echo "VoiceRec not found in app list"
+
+          # アプリ起動＆ログ取得
+          echo "Launching app..."
+          xcrun simctl launch "$UDID" com.voicerec.app 2>&1 || echo "Launch failed or no output"
           sleep 5
-          # アプリを起動（フォアグラウンド）
-          xcrun simctl launch "$UDID" com.voicerec.app
-          echo "App launched."
-          sleep 10
-          # 念のため再度launchしてフォアグラウンドに
-          xcrun simctl launch "$UDID" com.voicerec.app
-          echo "Waiting for UI..."
-          sleep 30
+
+          # プロセス確認
+          echo "Running processes:"
+          xcrun simctl spawn "$UDID" ps aux | grep -i voicerec || echo "VoiceRec process not found"
+
+          sleep 20
 
       - name: Capture screenshots
         script: |
           UDID=$(xcrun simctl list devices booted | grep -oE '[0-9A-F-]{36}' | head -1)
+          echo "Taking screenshot of UDID: $UDID"
           mkdir -p "$CM_BUILD_DIR/screenshots"
 
-          # ホーム画面スクリーンショット
-          xcrun simctl io "$UDID" screenshot "$CM_BUILD_DIR/screenshots/01_home.png"
-          sleep 2
-
-          echo "Screenshots saved to $CM_BUILD_DIR/screenshots/"
-          ls "$CM_BUILD_DIR/screenshots/"
+          xcrun simctl io "$UDID" screenshot "$CM_BUILD_DIR/screenshots/01_screen.png"
+          echo "Screenshot taken."
+          ls -la "$CM_BUILD_DIR/screenshots/"
 
     artifacts:
       - $CM_BUILD_DIR/screenshots/*.png
