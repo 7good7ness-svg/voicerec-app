@@ -49,43 +49,41 @@ workflows:
 
       - name: Boot simulator & launch app
         script: |
-          # シミュレーターを起動
+          # 既存シミュレーターをすべてシャットダウン
+          xcrun simctl shutdown all || true
+          sleep 3
+
           UDID=$(xcrun simctl list devices available | grep "$SIMULATOR_NAME" | head -1 | grep -oE '[0-9A-F-]{36}')
           echo "Simulator UDID: $UDID"
-          xcrun simctl boot "$UDID" || true
-          open -a Simulator
-          xcrun simctl bootstatus "$UDID" -b
-          echo "Simulator booted. Waiting for SpringBoard..."
-          sleep 30
 
-          # アプリをインストール
+          # UDIDをファイルに保存（Captureステップで使用）
+          echo "$UDID" > /tmp/sim_udid
+
+          # シミュレーター起動
+          xcrun simctl boot "$UDID"
+          open -a Simulator
+
+          # SpringBoard完全起動まで待機（固定90秒）
+          echo "Waiting 90s for SpringBoard to fully load..."
+          sleep 90
+
+          # アプリをインストール＆起動
           APP_PATH=$(find "$CM_BUILD_DIR/DerivedData" -name "*.app" -not -path "*/WatchApp*" | head -1)
           echo "App path: $APP_PATH"
           xcrun simctl install "$UDID" "$APP_PATH"
-
-          # インストール確認
-          echo "Installed apps:"
-          xcrun simctl listapps "$UDID" | grep -i voicerec || echo "VoiceRec not found in app list"
-
-          # アプリ起動＆ログ取得
-          echo "Launching app..."
-          xcrun simctl launch "$UDID" com.voicerec.app 2>&1 || echo "Launch failed or no output"
-          sleep 5
-
-          # プロセス確認
-          echo "Running processes:"
-          xcrun simctl spawn "$UDID" ps aux | grep -i voicerec || echo "VoiceRec process not found"
-
-          sleep 20
+          echo "Launching VoiceRec..."
+          xcrun simctl launch "$UDID" com.voicerec.app
+          echo "Waiting 30s for app UI..."
+          sleep 30
 
       - name: Capture screenshots
         script: |
-          UDID=$(xcrun simctl list devices booted | grep -oE '[0-9A-F-]{36}' | head -1)
+          UDID=$(cat /tmp/sim_udid)
           echo "Taking screenshot of UDID: $UDID"
           mkdir -p "$CM_BUILD_DIR/screenshots"
 
           xcrun simctl io "$UDID" screenshot "$CM_BUILD_DIR/screenshots/01_screen.png"
-          echo "Screenshot taken."
+          echo "Screenshot saved."
           ls -la "$CM_BUILD_DIR/screenshots/"
 
     artifacts:
