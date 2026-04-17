@@ -115,11 +115,26 @@ PYEOF
 
           # インストール＆起動
           xcrun simctl install "$UDID" "$APP_PATH"
-          xcrun simctl launch "$UDID" "$BUNDLE_ID"
+          echo "Launching app..."
+          xcrun simctl launch "$UDID" "$BUNDLE_ID" || echo "Launch returned non-zero"
+
+          # プロセス起動確認
+          sleep 3
+          echo "--- Running processes ---"
+          xcrun simctl spawn "$UDID" launchctl list | grep voicerec || echo "VoiceRec not in launchctl"
+          xcrun simctl spawn "$UDID" ps aux 2>/dev/null | grep -i voicerec | grep -v grep || echo "VoiceRec process not found"
 
           # アプリ UI の描画待ち
-          echo "Waiting 20s for app UI..."
-          sleep 20
+          echo "Waiting 25s for app UI..."
+          sleep 25
+
+          # クラッシュログ確認
+          echo "--- Crash logs ---"
+          find ~/Library/Logs/DiagnosticReports/ -name "VoiceRec*" 2>/dev/null | head -5 || echo "No crash reports"
+
+          # デバイスログ（直近）
+          echo "--- Device log (VoiceRec) ---"
+          xcrun simctl spawn "$UDID" log show --predicate 'process == "VoiceRec"' --last 30s 2>/dev/null | tail -30 || true
 
       - name: Capture screenshots
         script: |
