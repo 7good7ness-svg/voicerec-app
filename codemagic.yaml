@@ -13,8 +13,8 @@ workflows:
       vars:
         XCODE_PROJECT: "VoiceRec.xcodeproj"
         XCODE_SCHEME: "VoiceRec"
+        BUNDLE_ID: "com.voicerec.app"
         SIMULATOR_NAME: "iPhone 15 Pro"
-        SIMULATOR_OS: "17.4"
       xcode: latest
 
     triggering:
@@ -29,6 +29,7 @@ workflows:
     scripts:
       - name: Resolve SPM dependencies
         script: |
+          set -euo pipefail
           xcodebuild \
             -resolvePackageDependencies \
             -project "$XCODE_PROJECT" \
@@ -36,6 +37,10 @@ workflows:
 
       - name: Build for simulator (no signing)
         script: |
+          set -euo pipefail
+          # tee でログを保存しつつ xcpretty で表示
+          # PIPESTATUS でビルドの終了コードを取得
+          set -o pipefail
           xcodebuild \
             -project "$XCODE_PROJECT" \
             -scheme "$XCODE_SCHEME" \
@@ -45,48 +50,97 @@ workflows:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
             -derivedDataPath "$CM_BUILD_DIR/DerivedData" \
-            build | xcpretty
+            build 2>&1 | tee /tmp/xcodebuild.log | xcpretty --color
 
-      - name: Boot simulator, launch app & capture screenshots
+      - name: Boot simulator, install & launch app
         script: |
-          # 既存シミュレーターをすべてシャットダウン
-          xcrun simctl shutdown all || true
-          sleep 3
+          set -euo pipefail
 
-          UDID=$(xcrun simctl list devices available | grep "$SIMULATOR_NAME" | head -1 | grep -oE '[0-9A-F-]{36}')
-          echo "Simulator UDID: $UDID"
+          # クリーンスタート
+          xcrun simctl shutdown all 2>/dev/null || true
+          sleep 2
 
-          # シミュレーター起動
+          # Python3 で JSON パース → 確実に UDID 取得
+          UDID=$(xcrun simctl list devices available --json | python3 - <<'PYEOF'
+import sys, json
+data = json.load(sys.stdin)
+name = "$SIMULATOR_NAME"
+for runtime, devices in data["devices"].items():
+    for d in devices:
+        if d["name"] == name and d.get("isAvailable", False):
+            print(d["udid"])
+            sys.exit(0)
+print("")
+PYEOF
+)
+
+          if [ -z "$UDID" ]; then
+            echo "=== ERROR: Simulator '$SIMULATOR_NAME' not found ==="
+            echo "Available simulators:"
+            xcrun simctl list devices available | grep -E "iPhone" | head -20
+            exit 1
+          fi
+          echo "UDID: $UDID"
+          echo "$UDID" > /tmp/sim_udid
+
+          # 起動
           xcrun simctl boot "$UDID"
           open -a Simulator
 
-          # SpringBoard完全起動まで待機
-          echo "Waiting 90s for SpringBoard..."
-          sleep 90
+          # Booted 状態になるまでポーリング（最大 120 秒）
+          echo "Polling for 'Booted' state..."
+          ELAPSED=0
+          until xcrun simctl list devices | grep "$UDID" | grep -q "Booted"; do
+            [ "$ELAPSED" -ge 120 ] && { echo "ERROR: Boot timeout"; exit 1; }
+            sleep 5; ELAPSED=$((ELAPSED+5))
+            echo "  ${ELAPSED}s ..."
+          done
+          echo "Booted in ${ELAPSED}s"
 
-          # アプリをインストール＆起動
-          APP_PATH=$(find "$CM_BUILD_DIR/DerivedData" -name "*.app" -not -path "*/WatchApp*" | head -1)
-          echo "App path: $APP_PATH"
+          # SpringBoard の UI が描画されるまで追加待機
+          sleep 15
+
+          # .app パスを検索（Watch 関連を除外）
+          APP_PATH=$(find "$CM_BUILD_DIR/DerivedData" \
+            -name "VoiceRec.app" \
+            -not -path "*Watch*" \
+            | head -1)
+
+          [ -z "$APP_PATH" ] && {
+            echo "=== ERROR: VoiceRec.app not found ==="
+            find "$CM_BUILD_DIR/DerivedData" -name "*.app" | head -10
+            exit 1
+          }
+          echo "App: $APP_PATH"
+
+          # インストール＆起動
           xcrun simctl install "$UDID" "$APP_PATH"
-          echo "Launching VoiceRec..."
-          xcrun simctl launch "$UDID" com.voicerec.app
-          echo "Waiting 30s for app UI..."
-          sleep 30
+          xcrun simctl launch "$UDID" "$BUNDLE_ID"
 
-          # スクリーンショット取得
+          # アプリ UI の描画待ち
+          echo "Waiting 20s for app UI..."
+          sleep 20
+
+      - name: Capture screenshots
+        script: |
+          set -euo pipefail
+          UDID=$(cat /tmp/sim_udid)
           mkdir -p "$CM_BUILD_DIR/screenshots"
-          xcrun simctl io "$UDID" screenshot "$CM_BUILD_DIR/screenshots/01_screen.png"
-          echo "Screenshot saved:"
-          ls -la "$CM_BUILD_DIR/screenshots/"
+
+          xcrun simctl io "$UDID" screenshot \
+            "$CM_BUILD_DIR/screenshots/01_main.png"
+
+          echo "Screenshots:"
+          ls -lah "$CM_BUILD_DIR/screenshots/"
 
     artifacts:
       - $CM_BUILD_DIR/screenshots/*.png
-      - /tmp/xcodebuild_logs/*.log
+      - /tmp/xcodebuild.log
 
     publishing:
       email:
         recipients:
-          - your-email@example.com
+          - 7good7ness@gmail.com
         notify:
           success: true
           failure: true
@@ -112,7 +166,7 @@ workflows:
         XCODE_SCHEME: "VoiceRec"
         BUNDLE_ID: "com.voicerec.app"
         WATCH_BUNDLE_ID: "com.voicerec.app.watchkitapp"
-        APP_STORE_APPLE_ID: "YOUR_APP_APPLE_ID"
+        APP_STORE_APPLE_ID: "YOUR_APP_APPLE_ID"  # ← 要変更
       xcode: latest
 
     triggering:
@@ -125,25 +179,25 @@ workflows:
     scripts:
       - name: Set build number from CI
         script: |
+          set -euo pipefail
           BUILD_NUMBER=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID") + 1))
           agvtool new-version -all "$BUILD_NUMBER"
+          echo "Build number: $BUILD_NUMBER"
 
       - name: Set up code signing
         script: |
+          set -euo pipefail
           keychain initialize
           app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --platform IOS \
-            --type IOS_APP_STORE \
-            --create
+            --platform IOS --type IOS_APP_STORE --create
           app-store-connect fetch-signing-files "$WATCH_BUNDLE_ID" \
-            --platform IOS \
-            --type IOS_APP_STORE \
-            --create
+            --platform IOS --type IOS_APP_STORE --create
           keychain add-certificates
           xcode-project use-profiles
 
       - name: Resolve SPM dependencies
         script: |
+          set -euo pipefail
           xcodebuild \
             -resolvePackageDependencies \
             -project "$XCODE_PROJECT" \
@@ -152,6 +206,7 @@ workflows:
 
       - name: Build and archive
         script: |
+          set -euo pipefail
           xcode-project build-ipa \
             --project "$XCODE_PROJECT" \
             --scheme "$XCODE_SCHEME" \
@@ -172,7 +227,7 @@ workflows:
           - Internal Testers
       email:
         recipients:
-          - your-email@example.com
+          - 7good7ness@gmail.com
         notify:
           success: true
           failure: true
