@@ -47,7 +47,7 @@ workflows:
             -derivedDataPath "$CM_BUILD_DIR/DerivedData" \
             build | xcpretty
 
-      - name: Boot simulator & launch app
+      - name: Boot simulator, launch app & capture screenshots
         script: |
           # 既存シミュレーターをすべてシャットダウン
           xcrun simctl shutdown all || true
@@ -56,15 +56,12 @@ workflows:
           UDID=$(xcrun simctl list devices available | grep "$SIMULATOR_NAME" | head -1 | grep -oE '[0-9A-F-]{36}')
           echo "Simulator UDID: $UDID"
 
-          # UDIDをファイルに保存（Captureステップで使用）
-          echo "$UDID" > /tmp/sim_udid
-
           # シミュレーター起動
           xcrun simctl boot "$UDID"
           open -a Simulator
 
-          # SpringBoard完全起動まで待機（固定90秒）
-          echo "Waiting 90s for SpringBoard to fully load..."
+          # SpringBoard完全起動まで待機
+          echo "Waiting 90s for SpringBoard..."
           sleep 90
 
           # アプリをインストール＆起動
@@ -76,14 +73,10 @@ workflows:
           echo "Waiting 30s for app UI..."
           sleep 30
 
-      - name: Capture screenshots
-        script: |
-          UDID=$(cat /tmp/sim_udid)
-          echo "Taking screenshot of UDID: $UDID"
+          # スクリーンショット取得
           mkdir -p "$CM_BUILD_DIR/screenshots"
-
           xcrun simctl io "$UDID" screenshot "$CM_BUILD_DIR/screenshots/01_screen.png"
-          echo "Screenshot saved."
+          echo "Screenshot saved:"
           ls -la "$CM_BUILD_DIR/screenshots/"
 
     artifacts:
